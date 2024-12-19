@@ -86,7 +86,7 @@ class LoginPage extends StatelessWidget {
                   SizedBox(width: 25),
 
                   // apple button
-                  SquareTile(imagePath: 'lib/images/apple.png')
+                  SquareTile(imagePath: 'lib/images/apple.png'),
                 ],
               ),
             const SizedBox(height: 45),
