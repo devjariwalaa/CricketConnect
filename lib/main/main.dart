@@ -1,4 +1,4 @@
-import 'package:crickett_connect/pages/loginpage.dart';
+import 'package:crickett_connect/pages/authpage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -24,7 +24,7 @@ class CricketConnect extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color.fromARGB(255, 19, 19, 19),
       ),
-      home: LoginPage(),
+      home: AuthPage(),
       debugShowCheckedModeBanner: false,
     );
   }

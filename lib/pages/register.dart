@@ -5,21 +5,22 @@ import 'package:crickett_connect/components/squaretile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   // text editing controller
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confpassController = TextEditingController();
 
-  // sign the user in
-  void signUserIn() async {
+  // sign the user up
+  void signUserUp() async {
     // Show loading dialog
     showDialog(
       context: context,
@@ -32,11 +33,15 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     try {
-      // Attempt sign-in
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      // Attempt sign-up
+      if (passwordController.text == confpassController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } else {
+        showErrorMessage("Passwords do not match");
+      }
 
       // Close loading dialog if successful
       Navigator.pop(context);
@@ -45,34 +50,26 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
 
       // Show appropriate error dialog
-      if (e.code == 'user-not-found') {
-        wrongEmailMessage();
-      } else if (e.code == 'wrong-password') {
-        wrongPasswordMessage();
+      if (e.code == 'email-already-in-use') {
+        showErrorMessage("The email address is already in use by another account.");
+      } else if (e.code == 'weak-password') {
+        showErrorMessage("The password is too weak.");
+      } else if (e.code == 'invalid-email') {
+        showErrorMessage("The email address is not valid.");
+      } else {
+        showErrorMessage(e.message ?? "An unknown error occurred.");
       }
     }
   }
 
-// Error dialogs
-  void wrongEmailMessage() {
+  // Show error message dialog
+  void showErrorMessage(String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text("Incorrect Email"),
-          content: Text("No user found with that email."),
-        );
-      },
-    );
-  }
-
-  void wrongPasswordMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text("Incorrect Password"),
-          content: Text("The password entered is incorrect."),
+        return AlertDialog(
+          title: const Text("Error"),
+          content: Text(message),
         );
       },
     );
@@ -90,10 +87,10 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 100),
               LogoWidget(),
               const SizedBox(height: 35),
-              // say login
+              // say register
               Center(
                 child: Text(
-                  "Login",
+                  "Register",
                   style: TextStyle(
                     fontSize: 30, // Adjust this value to change the text size
                     fontWeight: FontWeight.bold,
@@ -113,12 +110,18 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: "Password",
                 obscureText: true,
               ),
+              // confirm password
+              MyTextField(
+                controller: confpassController,
+                hintText: "Confirm Password",
+                obscureText: true,
+              ),
               const SizedBox(height: 10),
-              Text("Forgot Password?"),
+              
               const SizedBox(height: 20),
               MyButton(
-                onTap: signUserIn,
-                text: "Sign In",
+                onTap: signUserUp,
+                text: "Sign Up",
               ),
               const SizedBox(height: 25),
               Row(
@@ -132,8 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal:
-                            10.0), // Adds space between Divider and Text
+                        horizontal: 10.0), // Adds space between Divider and Text
                     child: Text("Continue with"),
                   ),
                   Expanded(
@@ -162,28 +164,28 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Not a member?',
+                    'Already have an account?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
-                 Material(
-                  color: Colors.transparent, // Optional: Set the background color if you want it visible
-                  child: InkWell(
-                    onTap: widget.onTap, // Use this to trigger the tap action
-                    splashColor: Colors.grey, // Color of the ripple effect
-                    highlightColor: Colors.grey[300], // Highlight color when tapped
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0), // Add padding to your text if necessary
-                      child: Text(
-                        'Register now',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
+                  Material(
+                    color: Colors.transparent, // Optional: Set the background color if you want it visible
+                    child: InkWell(
+                      onTap: widget.onTap, // Use this to trigger the tap action
+                      splashColor: Colors.grey, // Color of the ripple effect
+                      highlightColor: Colors.grey[300], // Highlight color when tapped
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0), // Add padding to your text if necessary
+                        child: Text(
+                          'Login now',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
+                  )
                 ],
               ),
             ],

@@ -1,11 +1,17 @@
 import 'package:crickett_connect/components/bottom_nav.dart';
 import 'package:crickett_connect/components/my_drawer.dart';
 import 'package:crickett_connect/components/logo_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/search_bar.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+  //sign user out
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
+
+  const SearchPage({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +22,13 @@ class SearchPage extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: Icon(
-              Icons.settings,
-              color: Colors.white,
-              size: 28,
+            child: GestureDetector(
+              onTap: signUserOut,
+              child: Icon(
+                Icons.settings,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
           ),
         ],
