@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "crickett_connect",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main.dart"
+      },
+      {
+        "name": "crickett_connect (profile mode)",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "profile",
+        "program": "lib/main.dart"
+      },
+      {
+        "name": "crickett_connect (release mode)",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "release",
+        "program": "lib/main.dart"
+      }
+    ]
+  }

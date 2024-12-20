@@ -2,6 +2,7 @@ import 'package:crickett_connect/components/logo_widget.dart';
 import 'package:crickett_connect/components/my_button.dart';
 import 'package:crickett_connect/components/my_textfield.dart';
 import 'package:crickett_connect/components/squaretile.dart';
+import 'package:crickett_connect/services/authservice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -145,17 +146,30 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               const SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  // google button
-                  SquareTile(imagePath: 'lib/images/google.png'),
+              InkWell(
+                onTap: () {
+                  // Handle tap action here
+                },
+                splashColor: Colors.grey, // Color of the ripple effect
+                highlightColor: Colors.grey[300], // Highlight color when tapped
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // google button
+                    SquareTile(
+                      onTap: () => AuthService().googleSignIn(),
+                      imagePath: 'lib/images/google.png',
+                    ),
 
-                  SizedBox(width: 25),
+                    const SizedBox(width: 25),
 
-                  // apple button
-                  SquareTile(imagePath: 'lib/images/apple.png'),
-                ],
+                    // apple button
+                    SquareTile(
+                      onTap: () {},
+                      imagePath: 'lib/images/apple.png',
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 45),
               Row(
