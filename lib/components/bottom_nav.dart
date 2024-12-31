@@ -49,10 +49,7 @@ Widget build(BuildContext context) {
             icon: Icons.video_library,
             text: 'Video Hub',
           ),
-          GButton(
-            icon: Icons.person,
-            text: 'Profile',
-          ),
+      
         ],
       ),
     ),
