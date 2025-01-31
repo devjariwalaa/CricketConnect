@@ -4,13 +4,13 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is has some aspects completed and others still in the works.
 
-A few resources to get you started if this is your first Flutter project:
+This project has: 
+ 1. Google sign in verification through FireBase.
+ 2. Chatbot through Flask server connection.
+ 3. History tracker.
+ 4. New User Registeration.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The project will be a functional cricket application where users can ask the chatbot cricket related querie (this is completed) and can see videos on how to improve (coming soon) and live scores (coming soon). I am working on currently finding an live scores API to integrate inside of my app. 
