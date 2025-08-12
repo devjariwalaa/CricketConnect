@@ -38,7 +38,6 @@ dependencies:
   firebase_auth: ^5.3.4
   google_sign_in: ^6.2.2
   http: ^0.13.1
-  dialog_flowtter: ^0.3.3
   cloud_firestore: ^5.6.0
 
 dev_dependencies:

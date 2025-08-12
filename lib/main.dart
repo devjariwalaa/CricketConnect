@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:crickett_connect/pages/authpage.dart';
 import 'firebase_options.dart';
-import 'services/dialogflow_service.dart'; // Import your DialogflowService
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,13 +10,8 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     print("Firebase initialized successfully.");
-
-    // Initialize Dialogflow
-    final dialogflowService = DialogflowService();
-    await dialogflowService.init();
-    print("Dialogflow initialized successfully.");
   } catch (e) {
-    print("Error initializing Firebase or Dialogflow: $e");
+    print("Error initializing Firebase: $e");
   }
 
   runApp(const CricketConnect());

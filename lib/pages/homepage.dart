@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../components/search_bar.dart';
 import '../components/messages.dart'; // Import MessagesScreen
-import '../services/dialogflow_service.dart'; // Import DialogflowService
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -14,45 +15,71 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final DialogflowService _dialogflowService = DialogflowService(); // Initialize DialogflowService
   final TextEditingController _controller = TextEditingController();
   List<Map<String, dynamic>> messages = []; // List to hold the messages
 
   @override
   void initState() {
     super.initState();
-    _dialogflowService.init(); // Initialize Dialogflow
   }
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
 
-  void sendMessage(String text) async {
+  Future<void> sendMessage(String text) async {
     if (text.isNotEmpty) {
       setState(() {
         messages.add({'message': text, 'isUserMessage': true}); // Add user message
       });
 
-      // Get Dialogflow response
-      String response = await _dialogflowService.getResponse(text);
-      setState(() {
-        messages.add({'message': response, 'isUserMessage': false}); // Add bot response
-      });
+      try {
+        // Call your Flask API
+        final response = await _getResponseFromFlask(text);
+        setState(() {
+          messages.add({'message': response, 'isUserMessage': false}); // Add bot response
+        });
+      } catch (e) {
+        setState(() {
+          messages.add({'message': 'An error occurred, please try again.', 'isUserMessage': false});
+        });
+      }
+    }
+  }
+
+  // Function to send request to Flask API
+  Future<String> _getResponseFromFlask(String question) async {
+    final url = Uri.parse('http://127.0.0.1:5000/ask'); // Flask API URL
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'question': question});
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['response']; // The LLaMA response
+      } else {
+        return 'Error: ${response.statusCode}';
+      }
+    } catch (e) {
+      return 'Error: $e';
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final String userId = FirebaseAuth.instance.currentUser?.uid ?? ''; // Retrieve userId
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-                  "CricketConnect",
-                  style: TextStyle(
-                    fontSize: 23, // Adjust this value to change the text size
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+          "CricketConnect",
+          style: TextStyle(
+            fontSize: 23, // Adjust this value to change the text size
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: const Color.fromARGB(255, 39, 39, 39),
         elevation: 0,
         actions: [
@@ -94,7 +121,9 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
 
-      drawer: MyDrawer(),
+      drawer: MyDrawer(
+        userId: userId, // Pass the userId to the drawer
+      ),
       bottomNavigationBar: BottomNav(),
       body: Column(
         children: [
